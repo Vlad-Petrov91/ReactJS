@@ -1,72 +1,58 @@
-
-import { useState, useEffect } from "react"
-// import { Button } from "./components/Button"
-// import { Input } from "./components/Input"
-
-
-
+import { useState, useEffect } from "react";
+import { Button } from "./components/Button";
+import { Input } from "./components/Input";
 
 
 function App() {
 
 
+  const [value, setValue] = useState('');
 
-  // const createMessage = (message, user) => ({
-  //   message,
-  //   user
-  // });
+  const onChange = messageText => {
+    setValue(messageText.target.value)
+  }
 
-  const madeMessage = (message, user = "Vlad") => ({
+
+  const [message, messageList] = useState([]);
+
+  useEffect(() => {
+    const lastMessage = message.slice(-1);
+    if (lastMessage.length && lastMessage[0].user !== 'Bot') {
+      addMessage((createMessage('Hello world', "Bot")))
+    }
+
+  }, [message])
+
+
+  const createMessage = (message, user = "Vlad") => ({
     message,
     user
   });
 
-  const [value, setValue] = useState('');
 
-  const onChange = e => {
-    setValue(e.target.value)
-  }
-
-  const [message, messageList] = useState([]);
-
-
-  const addMessage = (...items1) => {
+  const addMessage = (...items) => {
     messageList((message) => {
       return [
         ...message,
-        ...items1,
+        ...items,
       ]
     })
 
   }
 
+  const clearMessageList = () => messageList([]);
+
 
 
   return (
-
-
-    <div className="App">
-
-
-      {/* <Input props={(event) => { console.dir(event.target.value) }} /> */}
-
-      <input type="text" value={value} onChange={onChange} />
-
-      {/* <Button text="SendMessage" func={() => {
-        addMessage(madeMessage('user', 'sdsd'));
-
-      }} /> */}
-
-
-      <button onClick={() => {
-        addMessage(madeMessage(value));
-
-      }} >SendMessage</button>
+    <div>
+      <Input type="text" value={value} func={onChange} />
+      <Button text="Send message" func={() => { addMessage((createMessage(value, "Vlad"))) }} />
+      <Button text="Clear" func={() => { clearMessageList() }} />
 
 
 
-      <ul>
-
+      < ul >
         {
           message.map(({ message, user }) => <li>
             <h3>
@@ -77,26 +63,8 @@ function App() {
             </p>
           </li>)
         }
-      </ul>
-
-
-
-
-
-      {/* <button
-        onClick={() => {
-          addMessage(createMessage('user', Date.now()));
-        }}>
-        append1
-      </button> */}
-
-
-    </div>
-
-
-
-
+      </ul >
+    </div >
   )
-
 }
-export default App
+export default App;
